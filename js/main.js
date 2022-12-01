@@ -52,7 +52,7 @@ class Player {
             //update css for the player dom element   
             this.domElement.style.left = this.positionX + "vw";    
         }
-        console.log(`new position...${this.positionX}`);
+        //console.log(`new position...${this.positionX}`);
     }
 
     moveRight(){
@@ -60,7 +60,7 @@ class Player {
         this.positionX += 3;
         this.domElement.style.left = this.positionX + "vw";
         }
-        console.log(`new position...${this.positionX}`);
+        //console.log(`new position...${this.positionX}`);
     }
 }
 
@@ -68,7 +68,7 @@ const player = new Player();
 
 document.addEventListener('keydown', (e) => {
     //const key = e.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
-    console.log(e.key); //log what keyboard enter
+    //console.log(e.key); //log what keyboard enter
     if(e.key === "ArrowRight") {
         player.moveRight();
     } else if (e.key === "ArrowLeft") {
