@@ -3,10 +3,10 @@
 *** Milestone 1: user can move the player left/right *** 
 
 [x] initial setup (html, css, js)
-[ ] create git repo
+[x] create git repo
 
 - Player class
-  - position
+  - [x] positionX --> horizontal
   - size
   - appearance ?
   - moveLeft()
