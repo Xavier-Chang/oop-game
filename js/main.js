@@ -1,17 +1,3 @@
-//console.log("js loaded"); //for testing
-
-/*
-// step1: create the element:
-const myNewImg = document.createElement('img');
-
-// step2: add content or modify (ex. innerHTML...)
-myNewImg.setAttribute("src", "./images/something.jpg")
-
-//step3: append to the dom: `parentElm.appendChild()`
-parentElm.appendChild(myNewImg)
-*/
-
-
 class Player {
     constructor(){
         
@@ -64,8 +50,51 @@ class Player {
     }
 }
 
-const player = new Player();
 
+
+//console.log(player.positionX); It's not work as it just excutes one time.
+
+class Obstacle {
+    constructor() {
+        this.width = 20;
+        this.height = 10;
+        this.positionX = 50 - (this.width * 0.5); //centerposition
+        this.positionY = 80;
+
+        this.domElement = null; //put it above the method or constructor will excute firstly and no domElement.
+        this.createDomElement();
+    }
+
+    createDomElement() { 
+        this.domElement = document.createElement('div');
+
+        this.domElement.className = "obstacle"; //there're lots of obstacles, use class but not id
+        this.domElement.style.width = this.width + "vw"; //view width, need "string"!!
+        this.domElement.style.height = this.height + "vh"; //view heigh
+        this.domElement.style.bottom = this.positionY + "vh";
+        this.domElement.style.left = this.positionX + "vw";
+
+        //step3: append to the dom: `parentElm.appendChild()`
+        const boardElm = document.getElementById("board");
+        boardElm.appendChild(this.domElement);
+    }
+
+    moveDown() {
+        if (this.positionY > (0-this.height)){
+        this.positionY--; //update the info of positionY
+        this.domElement.style.bottom = this.positionY + "vh";} //reflect the changes
+        
+    }
+}
+
+const player = new Player();
+//const obstacle1 = new Obstacle(); no need to keep this, just one obstacle
+
+const obstacles = [];//set an array to keep the new obstacles; will hold instances of the class Obstacle
+
+
+
+//Attach event listeners
 document.addEventListener('keydown', (e) => {
     //const key = e.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
     //console.log(e.key); //log what keyboard enter
@@ -77,6 +106,36 @@ document.addEventListener('keydown', (e) => {
    
 });
 
-//console.log(player.positionX); It's not work as it just excutes one time.
+//How to create more obstacles? --> interval 1000ms
+//Where to store them?
+setInterval(() => {
+    const newObstacle = new Obstacle();
+    obstacles.push(newObstacle);
+}, 1000)
+
+//Move obstacles
+//bonus: start after 3s
+setTimeout(()=>{
+    setInterval(() => {
+
+        obstacles.forEach((obstacleInstance) => {
+            //move current obstacle
+            obstacleInstance.moveDown();
+            //detect if there's a collision between player and current obstacle
+            //obstacles.forEach
+            if (
+                player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
+                player.positionX + player.width > obstacleInstance.positionX &&
+                player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
+                player.height + player.positionY > obstacleInstance.positionY
+              ){
+                console.log('collision detected!')
+              }
+        });
+        //don't detect outside the loop as just one time collision is ok
+        
+        
+    }, 50);
+},3000)
 
 
