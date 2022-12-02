@@ -7,7 +7,7 @@ class Game { //game class hold all other class
         //shift() - remove the first element: 
         this.obstacles = [];
     }
-    start(){
+    start(){ //too long, need to break down
 
         this.player = new Player();
         //How to create more obstacles? --> interval 1000ms
@@ -26,37 +26,57 @@ class Game { //game class hold all other class
                     obstacleInstance.moveDown();
                     //detect if there's a collision between player and current obstacle
                     //obstacles.forEach
-                    if (
-                        this.player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
-                        this.player.positionX + this.player.width > obstacleInstance.positionX &&
-                        this.player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
-                        this.player.height + this.player.positionY > obstacleInstance.positionY
-                    ){
-                        //console.log('collision detected!') //we don't expect player open console
-                        //alert('gameover'); //need to refresh
-                        setTimeout(()=>{
-                            location.href = "gameover.html"//redirect to another page
-                        },400)
-                        
-                    }
-
-                    //check if we nned to remove current obstacle
-                    if(obstacleInstance.positionY <= 0 - obstacleInstance.height){
-                        //console.log("reove obstables with position", obstacleInstance.positionY);
-                        //obstacleInstance.domElement.style.backgroundColor = "orange";
-                        
-                        //obstacleInstance.shift();
-                        console.log(this.obstacles.length);
-                        obstacleInstance.domElement.remove();
-                        this.obstacles.shift();//remove from the array;
-                    };
+                    this.detectCollision(obstacleInstance);
                     
+                    //check if we nned to remove current obstacle
+                    this.removeObstacleIfOutside(obstacleInstance);                   
                 });
                 //don't detect outside the loop as just one time collision is ok
                 
                 
             }, 50);
-        },3000)
+        },5000)
+    }
+
+    attachEventListeners() {
+        //Attach event listeners
+        document.addEventListener('keydown', (e) => {
+            //const key = e.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+            //console.log(e.key); //log what keyboard enter
+            if (e.key === "ArrowRight") {
+                this.player.moveRight();
+            } else if (e.key === "ArrowLeft") {
+                this.player.moveLeft();
+            }
+        });
+    }
+
+    detectCollision(obstacleInstance) { //dont
+        if (
+            this.player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
+            this.player.positionX + this.player.width > obstacleInstance.positionX &&
+            this.player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
+            this.player.height + this.player.positionY > obstacleInstance.positionY
+        ){
+            //console.log('collision detected!') //we don't expect player open console
+            //alert('gameover'); //need to refresh
+            setTimeout(()=>{
+                location.href = "gameover.html"//redirect to another page
+            },400)
+            
+        }
+    }
+
+    removeObstacleIfOutside(obstacleInstance){
+        if(obstacleInstance.positionY <= 0 - obstacleInstance.height){
+            //console.log("reove obstables with position", obstacleInstance.positionY);
+            //obstacleInstance.domElement.style.backgroundColor = "orange";
+            
+            //obstacleInstance.shift();
+            console.log(this.obstacles.length);
+            obstacleInstance.domElement.remove();
+            this.obstacles.shift();//remove from the array;
+        };
     }
 }
 
@@ -149,10 +169,15 @@ class Obstacle {
         boardElm.appendChild(this.domElement);
     }
 
+    randomPosition (min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+
     moveDown() {
         //remove this after set detect 
         //if (this.positionY > (0-this.height)){
         this.positionY--; //update the info of positionY
+        //this.positionX = this.randomPosition(this.width, 100) - (this.width * 0.5);
         this.domElement.style.bottom = this.positionY + "vh"; //reflect the changes
         
     }
@@ -167,19 +192,8 @@ class Obstacle {
 /* set game class can also set start , restart and game over */
 const game = new Game();
 game.start();
+game.attachEventListeners();
 
-
-//Attach event listeners
-document.addEventListener('keydown', (e) => {
-    //const key = e.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
-    //console.log(e.key); //log what keyboard enter
-    if(e.key === "ArrowRight") {
-        game.player.moveRight();
-    } else if (e.key === "ArrowLeft") {
-        game.player.moveLeft();
-    }
-   
-});
 
 
 
