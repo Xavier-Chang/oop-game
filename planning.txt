@@ -49,3 +49,18 @@
             super....
         )
     )
+
+    start page: index.html --> instructions + link to "game.html"
+    
+    game.html --> game
+    
+    gameover.html --> start page
+
+    README.md --> markdown (markdown format)
+    explain a few ideas
+    參考other's README
+
+    it can be added in the Github
+    title
+    subtitle
+    list

@@ -73,7 +73,7 @@ class Game { //game class hold all other class
             //obstacleInstance.domElement.style.backgroundColor = "orange";
             
             //obstacleInstance.shift();
-            console.log(this.obstacles.length);
+            //console.log(this.obstacles.length);
             obstacleInstance.domElement.remove();
             this.obstacles.shift();//remove from the array;
         };
