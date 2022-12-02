@@ -1,3 +1,65 @@
+class Game { //game class hold all other class
+    constructor(){
+        this.player;
+        //set an array to keep the new obstacles; 
+        //will hold instances of the class Obstacle;
+        //detect outside the board - remove from the dom and this array, 
+        //shift() - remove the first element: 
+        this.obstacles = [];
+    }
+    start(){
+
+        this.player = new Player();
+        //How to create more obstacles? --> interval 1000ms
+//Where to store them?
+        setInterval(() => {
+            const newObstacle = new Obstacle();
+            this.obstacles.push(newObstacle);
+        }, 1000)
+
+        //Update obstacles
+        //bonus: start after 3s
+        setTimeout(()=>{
+            setInterval(() => {
+                this.obstacles.forEach((obstacleInstance) => {
+                    //move current obstacle
+                    obstacleInstance.moveDown();
+                    //detect if there's a collision between player and current obstacle
+                    //obstacles.forEach
+                    if (
+                        this.player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
+                        this.player.positionX + this.player.width > obstacleInstance.positionX &&
+                        this.player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
+                        this.player.height + this.player.positionY > obstacleInstance.positionY
+                    ){
+                        //console.log('collision detected!') //we don't expect player open console
+                        //alert('gameover'); //need to refresh
+                        setTimeout(()=>{
+                            location.href = "gameover.html"//redirect to another page
+                        },400)
+                        
+                    }
+
+                    //check if we nned to remove current obstacle
+                    if(obstacleInstance.positionY <= 0 - obstacleInstance.height){
+                        //console.log("reove obstables with position", obstacleInstance.positionY);
+                        //obstacleInstance.domElement.style.backgroundColor = "orange";
+                        
+                        //obstacleInstance.shift();
+                        console.log(this.obstacles.length);
+                        obstacleInstance.domElement.remove();
+                        this.obstacles.shift();//remove from the array;
+                    };
+                    
+                });
+                //don't detect outside the loop as just one time collision is ok
+                
+                
+            }, 50);
+        },3000)
+    }
+}
+
 class Player {
     constructor(){
         
@@ -96,15 +158,15 @@ class Obstacle {
     }
 }
 
-const player = new Player();
+//const player = new Player();
 //const obstacle1 = new Obstacle(); no need to keep this, just one obstacle
 
-//set an array to keep the new obstacles; 
-//will hold instances of the class Obstacle;
-//detect outside the board - remove from the dom and this array, 
-//shift() - remove the first element: 
-const obstacles = [];
 
+//const obstacles = [];
+
+/* set game class can also set start , restart and game over */
+const game = new Game();
+game.start();
 
 
 //Attach event listeners
@@ -112,60 +174,13 @@ document.addEventListener('keydown', (e) => {
     //const key = e.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
     //console.log(e.key); //log what keyboard enter
     if(e.key === "ArrowRight") {
-        player.moveRight();
+        game.player.moveRight();
     } else if (e.key === "ArrowLeft") {
-        player.moveLeft();
+        game.player.moveLeft();
     }
    
 });
 
-//How to create more obstacles? --> interval 1000ms
-//Where to store them?
-setInterval(() => {
-    const newObstacle = new Obstacle();
-    obstacles.push(newObstacle);
-}, 1000)
 
-//Move obstacles
-//bonus: start after 3s
-setTimeout(()=>{
-    setInterval(() => {
-
-        obstacles.forEach((obstacleInstance) => {
-            //move current obstacle
-            obstacleInstance.moveDown();
-            //detect if there's a collision between player and current obstacle
-            //obstacles.forEach
-            if (
-                player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
-                player.positionX + player.width > obstacleInstance.positionX &&
-                player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
-                player.height + player.positionY > obstacleInstance.positionY
-              ){
-                //console.log('collision detected!') //we don't expect player open console
-                //alert('gameover'); //need to refresh
-                setTimeout(()=>{
-                    location.href = "gameover.html"//redirect to another page
-                },400)
-                
-              }
-
-              //check if we nned to remove current obstacle
-              if(obstacleInstance.positionY <= 0 - obstacleInstance.height){
-                //console.log("reove obstables with position", obstacleInstance.positionY);
-                //obstacleInstance.domElement.style.backgroundColor = "orange";
-                
-                //obstacleInstance.shift();
-                console.log(obstacles.length);
-                obstacleInstance.domElement.remove();
-                obstacles.shift();//remove from the array;
-            };
-              
-        });
-        //don't detect outside the loop as just one time collision is ok
-        
-        
-    }, 50);
-},3000)
 
 
