@@ -58,15 +58,18 @@ class Obstacle {
     constructor() {
         this.width = 20;
         this.height = 10;
+        //Generate random number between two numbers
         /*
-        function randomIntFromInterval(0, 100) { // min and max included 
-             return Math.floor(Math.random() * (max - min + 1) + min)
-        }  
-        */
-        this.positionX = 20 - (this.width * 0.5); //centerposition
+        this.randomPosition() = function randomIntFromInterval(20, 100) { // min and max included 
+            return Math.floor(Math.random() * (101 - this.width + 1) + this.width)
+        };*/
+        
+        //this.positionX = this.randomPosition() - (this.width * 0.5); //centerposition
+        this.positionX = this.width - (this.width * 0.5); 
         this.positionY = 80;
-
-        this.domElement = null; //put it above the method or constructor will excute firstly and no domElement.
+        //put it above the method or constructor will excute firstly and no domElement.
+        //hold reference of each element
+        this.domElement = null; 
         this.createDomElement();
     }
 
@@ -85,9 +88,10 @@ class Obstacle {
     }
 
     moveDown() {
-        if (this.positionY > (0-this.height)){
+        //remove this after set detect 
+        //if (this.positionY > (0-this.height)){
         this.positionY--; //update the info of positionY
-        this.domElement.style.bottom = this.positionY + "vh";} //reflect the changes
+        this.domElement.style.bottom = this.positionY + "vh"; //reflect the changes
         
     }
 }
@@ -95,7 +99,11 @@ class Obstacle {
 const player = new Player();
 //const obstacle1 = new Obstacle(); no need to keep this, just one obstacle
 
-const obstacles = [];//set an array to keep the new obstacles; will hold instances of the class Obstacle
+//set an array to keep the new obstacles; 
+//will hold instances of the class Obstacle;
+//detect outside the board - remove from the dom and this array, 
+//shift() - remove the first element: 
+const obstacles = [];
 
 
 
@@ -141,6 +149,18 @@ setTimeout(()=>{
                 },400)
                 
               }
+
+              //check if we nned to remove current obstacle
+              if(obstacleInstance.positionY <= 0 - obstacleInstance.height){
+                //console.log("reove obstables with position", obstacleInstance.positionY);
+                //obstacleInstance.domElement.style.backgroundColor = "orange";
+                
+                //obstacleInstance.shift();
+                console.log(obstacles.length);
+                obstacleInstance.domElement.remove();
+                obstacles.shift();//remove from the array;
+            };
+              
         });
         //don't detect outside the loop as just one time collision is ok
         

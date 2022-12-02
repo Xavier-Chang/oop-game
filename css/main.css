@@ -13,6 +13,9 @@ body {
     background-color: pink;
     position: relative;
     height: 100vh; /*(100% of the height of screen, 100% is the height of content--not responsive)*/
+    /*it's ok for short term, but long term too many obstacles, some troubles happen*/
+    /*set remove() firstly*/
+    overflow: hidden; 
 }
 
 /*just set the color*/

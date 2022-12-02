@@ -20,7 +20,7 @@
 
 
 [x] Obstacle class
-[x] interval to create new obstacles
+[x] interval to create new obstacles (check if y=0)
 [x] css
 
 
