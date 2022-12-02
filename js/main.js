@@ -15,7 +15,7 @@ class Game { //game class hold all other class
         setInterval(() => {
             const newObstacle = new Obstacle();
             this.obstacles.push(newObstacle);
-        }, 1000)
+        }, 2500)
 
         //Update obstacles
         //bonus: start after 3s
@@ -34,8 +34,8 @@ class Game { //game class hold all other class
                 //don't detect outside the loop as just one time collision is ok
                 
                 
-            }, 50);
-        },5000)
+            }, 40);
+        },2000)
     }
 
     attachEventListeners() {
@@ -58,11 +58,11 @@ class Game { //game class hold all other class
             this.player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
             this.player.height + this.player.positionY > obstacleInstance.positionY
         ){
-            //console.log('collision detected!') //we don't expect player open console
+            console.log('collision detected!') //we don't expect player open console
             //alert('gameover'); //need to refresh
             setTimeout(()=>{
                 location.href = "gameover.html"//redirect to another page
-            },400)
+            },300)
             
         }
     }
@@ -140,14 +140,7 @@ class Obstacle {
     constructor() {
         this.width = 20;
         this.height = 10;
-        //Generate random number between two numbers
-        /*
-        this.randomPosition() = function randomIntFromInterval(20, 100) { // min and max included 
-            return Math.floor(Math.random() * (101 - this.width + 1) + this.width)
-        };*/
-        
-        //this.positionX = this.randomPosition() - (this.width * 0.5); //centerposition
-        this.positionX = this.width - (this.width * 0.5); 
+        this.positionX = (this.randomPosition(this.width, 100) - (this.width * 0.5));
         this.positionY = 80;
         //put it above the method or constructor will excute firstly and no domElement.
         //hold reference of each element
@@ -162,13 +155,14 @@ class Obstacle {
         this.domElement.style.width = this.width + "vw"; //view width, need "string"!!
         this.domElement.style.height = this.height + "vh"; //view heigh
         this.domElement.style.bottom = this.positionY + "vh";
-        this.domElement.style.left = this.positionX + "vw";
+        this.domElement.style.left = (this.randomPosition(this.width, 100) - (this.width * 0.5)) + "vw";
+        
 
         //step3: append to the dom: `parentElm.appendChild()`
         const boardElm = document.getElementById("board");
         boardElm.appendChild(this.domElement);
     }
-
+    //Generate random number between two numbers
     randomPosition (min, max) { // min and max included 
         return Math.floor(Math.random() * (max - min + 1) + min)
     }
@@ -177,9 +171,7 @@ class Obstacle {
         //remove this after set detect 
         //if (this.positionY > (0-this.height)){
         this.positionY--; //update the info of positionY
-        //this.positionX = this.randomPosition(this.width, 100) - (this.width * 0.5);
         this.domElement.style.bottom = this.positionY + "vh"; //reflect the changes
-        
     }
 }
 
