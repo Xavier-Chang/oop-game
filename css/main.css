@@ -26,3 +26,20 @@ body {
     position: absolute;
     background-color: yellow;
 }
+
+#page-gameover {
+    background-color: green;   
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 10vw;
+    }
+
+    a {
+       position: relative;
+       left: 40vw;
+       color: red; 
+       text-align: center;
+       font-size: 4vw;
+    }

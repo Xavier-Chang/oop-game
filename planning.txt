@@ -1,38 +1,29 @@
 
 
+
 *** Milestone 1: user can move the player left/right *** 
 
 [x] initial setup (html, css, js)
 [x] create git repo
-
 [x] Player class
-  - [x] positionX --> horizontal
+  - positionX
+  - positionY
   - size
-  - appearance ?
   - moveLeft()
   - moveRight()
-  - startPosition / stop ?
-
-[x] detect keyboard events (decide if player moves left/right)
-
+[x] add keyboard events
 
 
 
 *** Milestone 2: obstacles appearing in the UI + obstacles move + we detect if there's a collision *** 
-  (note: for this milestone, it's ok if obstacles appear always at the same position) === "shitty game"
-
-[x] Obstacle class?
-    - width
-    - height
-    - domElement
-    - poisiontY
-    - poistionX
-    - createDomElement();
-    - moveDown();
+  (note: for this milestone, it's ok if obstacles appear always at the same position)
 
 
-[x] interval to create new obstacles (setInterval (every xx seconds))
-[x] CSS
+[x] Obstacle class
+[x] interval to create new obstacles
+[x] css
+
+
 
 *** Milestone 3: make the game more interesting & fix bugs *** 
   - random position for obstacles
@@ -45,4 +36,16 @@
     - multiple lives
     - score
     - shooting
-    - start after XX seconds
+
+
+    hints
+    make a class of block
+    const player = new block()
+
+    const zombie = new block()
+
+    const bullet = new black(
+        constuctor(
+            super....
+        )
+    )

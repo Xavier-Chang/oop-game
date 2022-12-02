@@ -58,7 +58,12 @@ class Obstacle {
     constructor() {
         this.width = 20;
         this.height = 10;
-        this.positionX = 50 - (this.width * 0.5); //centerposition
+        /*
+        function randomIntFromInterval(0, 100) { // min and max included 
+             return Math.floor(Math.random() * (max - min + 1) + min)
+        }  
+        */
+        this.positionX = 20 - (this.width * 0.5); //centerposition
         this.positionY = 80;
 
         this.domElement = null; //put it above the method or constructor will excute firstly and no domElement.
@@ -129,7 +134,12 @@ setTimeout(()=>{
                 player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
                 player.height + player.positionY > obstacleInstance.positionY
               ){
-                console.log('collision detected!')
+                //console.log('collision detected!') //we don't expect player open console
+                //alert('gameover'); //need to refresh
+                setTimeout(()=>{
+                    location.href = "gameover.html"//redirect to another page
+                },400)
+                
               }
         });
         //don't detect outside the loop as just one time collision is ok
