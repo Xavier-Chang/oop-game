@@ -30,6 +30,11 @@ body {
     background-color: yellow;
 }
 
+.bullet {
+    position: absolute;
+    background-color: orange;
+}
+
 #page-gameover {
     background-color: green;   
     }

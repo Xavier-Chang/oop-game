@@ -6,10 +6,12 @@ class Game { //game class hold all other class
         //detect outside the board - remove from the dom and this array, 
         //shift() - remove the first element: 
         this.obstacles = [];
+        this.bullet;
     }
     start(){ //too long, need to break down
 
         this.player = new Player();
+        
         //How to create more obstacles? --> interval 1000ms
 //Where to store them?
         setInterval(() => {
@@ -26,15 +28,16 @@ class Game { //game class hold all other class
                     obstacleInstance.moveDown();
                     //detect if there's a collision between player and current obstacle
                     //obstacles.forEach
-                    this.detectCollision(obstacleInstance);
                     
+                    this.detectCollision(obstacleInstance);
+                    this.bulletHit(obstacleInstance);
                     //check if we nned to remove current obstacle
                     this.removeObstacleIfOutside(obstacleInstance);                   
                 });
                 //don't detect outside the loop as just one time collision is ok
                 
                 
-            }, 40);
+            }, 30);
         },2000)
     }
 
@@ -45,8 +48,13 @@ class Game { //game class hold all other class
             //console.log(e.key); //log what keyboard enter
             if (e.key === "ArrowRight") {
                 this.player.moveRight();
+                
             } else if (e.key === "ArrowLeft") {
                 this.player.moveLeft();
+            } else if (e.code === "Space") {
+                this.bullet = new Bullet(this.player.positionX, this.player.positionY, this.player.width);
+                this.bullet.shoot();
+                
             }
         });
     }
@@ -60,10 +68,24 @@ class Game { //game class hold all other class
         ){
             console.log('collision detected!') //we don't expect player open console
             //alert('gameover'); //need to refresh
+            /*
             setTimeout(()=>{
                 location.href = "gameover.html"//redirect to another page
             },300)
-            
+            */
+        }
+    }
+
+    bulletHit(obstacleInstance){
+        if (
+            this.bullet.positionX < obstacleInstance.positionX + obstacleInstance.width &&
+            this.bullet.positionX + this.bullet.width > obstacleInstance.positionX &&
+            this.bullet.positionY < obstacleInstance.positionY + obstacleInstance.height &&
+            this.bullet.height + this.bullet.positionY > obstacleInstance.positionY
+        ) {
+            console.log('bullet hit')
+            obstacleInstance.domElement.remove();
+            this.obstacles.shift();
         }
     }
 
@@ -88,6 +110,7 @@ class Player {
         this.height = 5;
         this.positionX = 50 - (this.width * 0.5); //centerposition
         this.positionY = 0;
+       
         this.domElement = null; //put it above the method or constructor will excute firstly and no domElement.
         this.createDomElement();
         //all method can access the domelement
@@ -130,6 +153,14 @@ class Player {
         }
         //console.log(`new position...${this.positionX}`);
     }
+
+    /*
+    moveUp() {
+        this.positionY +=4;
+        this.domElement.style.bottom = this.positionY + "vw";
+    }
+    */
+
 }
 
 
@@ -155,7 +186,7 @@ class Obstacle {
         this.domElement.style.width = this.width + "vw"; //view width, need "string"!!
         this.domElement.style.height = this.height + "vh"; //view heigh
         this.domElement.style.bottom = this.positionY + "vh";
-        this.domElement.style.left = (this.randomPosition(this.width, 100) - (this.width * 0.5)) + "vw";
+        this.domElement.style.left = this.positionX + "vw";
         
 
         //step3: append to the dom: `parentElm.appendChild()`
@@ -174,6 +205,48 @@ class Obstacle {
         this.domElement.style.bottom = this.positionY + "vh"; //reflect the changes
     }
 }
+
+class Bullet {
+    constructor(positionX, positionY, widthOfPlayer) {
+        this.width = 2;
+        this.height = 4;
+        this.widthOfPlayer = widthOfPlayer;
+        this.positionX = positionX + this.widthOfPlayer/2;
+        this.positionY = positionY;
+        //put it above the method or constructor will excute firstly and no domElement.
+        //hold reference of each element
+        this.domElement = null; 
+        this.createDomElement();
+    }
+
+    createDomElement() { 
+        this.domElement = document.createElement('div');
+        this.domElement.className = "bullet"; //there're lots of obstacles, use class but not id
+        this.domElement.style.width = this.width + "vw"; //view width, need "string"!!
+        this.domElement.style.height = this.height + "vh"; //view heigh
+        this.domElement.style.bottom = this.positionY + "vh";
+        this.domElement.style.left = this.positionX + "vw";
+
+        //step3: append to the dom: `parentElm.appendChild()`
+        const boardElm = document.getElementById("board");
+        boardElm.appendChild(this.domElement);
+    }
+
+    moveUp() {
+        this.positionY +=5;
+        this.domElement.style.bottom = this.positionY + "vw";
+    }
+
+    shoot() {
+        console.log('shoot');
+        if (this.positionY<=100){
+        setInterval(()=>{
+            this.moveUp();
+        }, 60);}
+        
+    }
+}
+
 
 //const player = new Player();
 //const obstacle1 = new Obstacle(); no need to keep this, just one obstacle
