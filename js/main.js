@@ -46,11 +46,14 @@ class Game { //game class hold all other class
         document.addEventListener('keydown', (e) => {
             //const key = e.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
             //console.log(e.key); //log what keyboard enter
-            if (e.key === "ArrowRight") {
+            if (e.key === "d") {
                 this.player.moveRight();
-                
-            } else if (e.key === "ArrowLeft") {
+            } else if (e.key === "a") {
                 this.player.moveLeft();
+            } else if (e.key === "w") {
+                this.player.moveUp();
+            } else if (e.key === "s") {
+                this.player.moveDown();
             } else if (e.code === "Space") {
                 this.bullet = new Bullet(this.player.positionX, this.player.positionY, this.player.width);
                 this.bullet.shoot();
@@ -68,11 +71,11 @@ class Game { //game class hold all other class
         ){
             console.log('collision detected!') //we don't expect player open console
             //alert('gameover'); //need to refresh
-            /*
+            
             setTimeout(()=>{
                 location.href = "gameover.html"//redirect to another page
             },300)
-            */
+            
         }
     }
 
@@ -148,18 +151,27 @@ class Player {
 
     moveRight(){
         if (this.positionX<(100-this.width)) {
-        this.positionX += 3;
-        this.domElement.style.left = this.positionX + "vw";
+            this.positionX += 3;
+            this.domElement.style.left = this.positionX + "vw";
         }
         //console.log(`new position...${this.positionX}`);
     }
 
-    /*
+    
     moveUp() {
-        this.positionY +=4;
-        this.domElement.style.bottom = this.positionY + "vw";
+        if (this.positionY<(100-this.height)) {
+            this.positionY += 3;
+            this.domElement.style.bottom = this.positionY + "vw";
+        }
     }
-    */
+
+    moveDown() {
+        if (this.positionY>0) {
+            this.positionY -= 3;
+            this.domElement.style.bottom = this.positionY + "vw";
+        }
+    }
+    
 
 }
 
