@@ -46,6 +46,8 @@ class Game { //game class hold all other class
         document.addEventListener('keydown', (e) => {
             //const key = e.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
             //console.log(e.key); //log what keyboard enter
+            
+            
             if (e.key === "d") {
                 this.player.moveRight();
             } else if (e.key === "a") {
@@ -57,7 +59,12 @@ class Game { //game class hold all other class
             } else if (e.code === "Space") {
                 this.bullet = new Bullet(this.player.positionX, this.player.positionY, this.player.width);
                 this.bullet.shoot();
-                
+            } else if (e.code === "ArrowRight") {
+                console.log("R");
+                this.player.rotateToRight();
+            } else if (e.code === "ArrowLeft") {
+                console.log("L");
+                this.player.rotateToLeft();
             }
         });
     }
@@ -172,7 +179,13 @@ class Player {
         }
     }
     
+    rotateToRight() {
+        this.domElement.style.transform = "rotate(90deg)";
+    }
 
+    rotateToLeft() {
+        this.domElement.style.transform = "rotate(-0.25turn)";
+    }
 }
 
 
@@ -216,6 +229,7 @@ class Obstacle {
         this.positionY--; //update the info of positionY
         this.domElement.style.bottom = this.positionY + "vh"; //reflect the changes
     }
+
 }
 
 class Bullet {
