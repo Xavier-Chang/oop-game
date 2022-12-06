@@ -34,7 +34,6 @@ class Game { //game class hold all other class
                     obstacleInstance.moveDown();
                     //detect if there's a collision between player and current obstacle
                     //obstacles.forEach
-                    
                     this.detectCollision(obstacleInstance);
                     //Some error's here
                     this.bulletHit(obstacleInstance);
@@ -77,6 +76,12 @@ class Game { //game class hold all other class
             } else if (e.code === "ArrowLeft") {
                 console.log("L");
                 this.player.rotateToLeft();
+            } else if (e.code === "ArrowUp") {
+                console.log("U");
+                this.player.rotateToFront();
+            } else if (e.code === "ArrowDown") {
+                console.log("D");
+                this.player.rotateToBack();
             }
         });
     }
@@ -138,8 +143,8 @@ class Player {
     constructor(){
         
         //use width and height as number, for calculation
-        this.width = 10 ; //size should set here but not css, otherwise js need to get info from css
-        this.height = 5;
+        this.width = 8 ; //size should set here but not css, otherwise js need to get info from css
+        this.height = 8;
         this.positionX = 50 - (this.width * 0.5); //centerposition
         this.positionY = 0;
        
@@ -201,11 +206,19 @@ class Player {
         }
     }
     
+    rotateToFront() {
+        this.domElement.style.transform = "rotate(0deg)";
+    }
+
     rotateToRight() {
         this.domElement.style.transform = "rotate(90deg)";
     }
 
     rotateToLeft() {
+        this.domElement.style.transform = "rotate(270deg)";
+    }
+
+    rotateToBack() {
         this.domElement.style.transform = "rotate(180deg)";
     }
 }
