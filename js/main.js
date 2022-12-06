@@ -7,10 +7,13 @@ class Game { //game class hold all other class
         //shift() - remove the first element: 
         this.obstacles = [];
         this.bullet;
+        this.mark=0;
+        
     }
     start(){ //too long, need to break down
 
         this.player = new Player();
+        //this.showScore();
         
         //How to create more obstacles? --> interval 1000ms
 //Where to store them?
@@ -18,9 +21,12 @@ class Game { //game class hold all other class
             const newObstacle = new Obstacle();
             this.obstacles.push(newObstacle);
         }, 2500)
-
+        
         //Update obstacles
         //bonus: start after 3s
+        this.bullet = new Bullet(this.player.positionX, this.player.positionY, this.player.width);
+        this.bullet.shoot();
+
         setTimeout(()=>{
             setInterval(() => {
                 this.obstacles.forEach((obstacleInstance) => {
@@ -30,6 +36,7 @@ class Game { //game class hold all other class
                     //obstacles.forEach
                     
                     this.detectCollision(obstacleInstance);
+                    //Some error's here
                     this.bulletHit(obstacleInstance);
                     //check if we nned to remove current obstacle
                     this.removeObstacleIfOutside(obstacleInstance);                   
@@ -38,7 +45,11 @@ class Game { //game class hold all other class
                 
                 
             }, 30);
+           
         },2000)
+
+        
+        
     }
 
     attachEventListeners() {
@@ -59,6 +70,7 @@ class Game { //game class hold all other class
             } else if (e.code === "Space") {
                 this.bullet = new Bullet(this.player.positionX, this.player.positionY, this.player.width);
                 this.bullet.shoot();
+               
             } else if (e.code === "ArrowRight") {
                 console.log("R");
                 this.player.rotateToRight();
@@ -79,14 +91,15 @@ class Game { //game class hold all other class
             console.log('collision detected!') //we don't expect player open console
             //alert('gameover'); //need to refresh
             
-            setTimeout(()=>{
+            /*setTimeout(()=>{
                 location.href = "gameover.html"//redirect to another page
-            },300)
+            },300)*/
             
         }
     }
 
     bulletHit(obstacleInstance){
+        //let mark = 0;
         if (
             this.bullet.positionX < obstacleInstance.positionX + obstacleInstance.width &&
             this.bullet.positionX + this.bullet.width > obstacleInstance.positionX &&
@@ -94,9 +107,12 @@ class Game { //game class hold all other class
             this.bullet.height + this.bullet.positionY > obstacleInstance.positionY
         ) {
             console.log('bullet hit')
+            this.mark++;
+            
             obstacleInstance.domElement.remove();
             this.obstacles.shift();
         }
+        this.showScore(this.mark);
     }
 
     removeObstacleIfOutside(obstacleInstance){
@@ -109,6 +125,12 @@ class Game { //game class hold all other class
             obstacleInstance.domElement.remove();
             this.obstacles.shift();//remove from the array;
         };
+    }
+
+    showScore(mark) {
+        const score = document.querySelector(".scoreBoard span");
+        score.innerHTML = mark;
+      
     }
 }
 
@@ -184,7 +206,7 @@ class Player {
     }
 
     rotateToLeft() {
-        this.domElement.style.transform = "rotate(-0.25turn)";
+        this.domElement.style.transform = "rotate(180deg)";
     }
 }
 
@@ -273,12 +295,6 @@ class Bullet {
     }
 }
 
-
-//const player = new Player();
-//const obstacle1 = new Obstacle(); no need to keep this, just one obstacle
-
-
-//const obstacles = [];
 
 /* set game class can also set start , restart and game over */
 const game = new Game();
