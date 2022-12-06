@@ -1,19 +1,22 @@
 class Game { //game class hold all other class
     constructor(){
-        this.player;
+        //this.player;
         //set an array to keep the new obstacles; 
         //will hold instances of the class Obstacle;
         //detect outside the board - remove from the dom and this array, 
         //shift() - remove the first element: 
         this.obstacles = [];
         this.bullet;
-        this.mark=0;
+        this.mark = 0;
+        this.right;
+        this.left;
+        this.front = true;
+        this.back;
         
     }
     start(){ //too long, need to break down
 
         this.player = new Player();
-        //this.showScore();
         
         //How to create more obstacles? --> interval 1000ms
 //Where to store them?
@@ -24,8 +27,8 @@ class Game { //game class hold all other class
         
         //Update obstacles
         //bonus: start after 3s
-        this.bullet = new Bullet(this.player.positionX, this.player.positionY, this.player.width);
-        this.bullet.shoot();
+        this.bullet = new Bullet(this.player.positionX, 100, 0, 0);
+        this.bullet.shootUp();
 
         setTimeout(()=>{
             setInterval(() => {
@@ -35,16 +38,13 @@ class Game { //game class hold all other class
                     //detect if there's a collision between player and current obstacle
                     //obstacles.forEach
                     this.detectCollision(obstacleInstance);
-                    //Some error's here
+                    
                     this.bulletHit(obstacleInstance);
                     //check if we nned to remove current obstacle
                     this.removeObstacleIfOutside(obstacleInstance);                   
                 });
-                //don't detect outside the loop as just one time collision is ok
-                
-                
+                //don't detect outside the loop as just one time collision is ok               
             }, 30);
-           
         },2000)
 
         
@@ -67,21 +67,41 @@ class Game { //game class hold all other class
             } else if (e.key === "s") {
                 this.player.moveDown();
             } else if (e.code === "Space") {
-                this.bullet = new Bullet(this.player.positionX, this.player.positionY, this.player.width);
-                this.bullet.shoot();
-               
-            } else if (e.code === "ArrowRight") {
-                console.log("R");
+                this.bullet = new Bullet(this.player.positionX, this.player.positionY, this.player.width, this.player.height);
+                if (this.front){
+                    this.bullet.shootUp(); 
+                } else if (this.right) {
+                    this.bullet.shootRight();
+                } else if (this.left) {
+                    this.bullet.shootLeft();
+                } else if (this.back) {
+                    this.bullet.shootDown();
+                }             
+                //this.bullet.shootRight();    
+            } else if (e.code === "ArrowRight") {       
                 this.player.rotateToRight();
+                this.front = false;
+                this.back = false;
+                this.right = true;
+                this.left = false;
             } else if (e.code === "ArrowLeft") {
-                console.log("L");
                 this.player.rotateToLeft();
-            } else if (e.code === "ArrowUp") {
-                console.log("U");
+                this.front = false;
+                this.back = false;
+                this.right = false;
+                this.left = true;
+            } else if (e.code === "ArrowUp") {               
                 this.player.rotateToFront();
+                this.front = true;
+                this.back = false;
+                this.right = false;
+                this.left = false;
             } else if (e.code === "ArrowDown") {
-                console.log("D");
                 this.player.rotateToBack();
+                this.front = false;
+                this.back = true;
+                this.right = false;
+                this.left = false;
             }
         });
     }
@@ -134,8 +154,7 @@ class Game { //game class hold all other class
 
     showScore(mark) {
         const score = document.querySelector(".scoreBoard span");
-        score.innerHTML = mark;
-      
+        score.innerHTML = mark;     
     }
 }
 
@@ -146,7 +165,7 @@ class Player {
         this.width = 8 ; //size should set here but not css, otherwise js need to get info from css
         this.height = 8;
         this.positionX = 50 - (this.width * 0.5); //centerposition
-        this.positionY = 0;
+        this.positionY = 50;
        
         this.domElement = null; //put it above the method or constructor will excute firstly and no domElement.
         this.createDomElement();
@@ -176,7 +195,7 @@ class Player {
 
     moveLeft(){
         if (this.positionX>0) {
-            this.positionX -= 3; //update value, no need to return     
+            this.positionX -= 2; //update value, no need to return     
             //update css for the player dom element   
             this.domElement.style.left = this.positionX + "vw";    
         }
@@ -185,7 +204,7 @@ class Player {
 
     moveRight(){
         if (this.positionX<(100-this.width)) {
-            this.positionX += 3;
+            this.positionX += 2;
             this.domElement.style.left = this.positionX + "vw";
         }
         //console.log(`new position...${this.positionX}`);
@@ -193,16 +212,16 @@ class Player {
 
     
     moveUp() {
-        if (this.positionY<(100-this.height)) {
+        if (this.positionY<100) {
             this.positionY += 3;
-            this.domElement.style.bottom = this.positionY + "vw";
+            this.domElement.style.bottom = this.positionY + "vh";
         }
     }
 
     moveDown() {
         if (this.positionY>0) {
             this.positionY -= 3;
-            this.domElement.style.bottom = this.positionY + "vw";
+            this.domElement.style.bottom = this.positionY + "vh";
         }
     }
     
@@ -268,7 +287,7 @@ class Obstacle {
 }
 
 class Bullet {
-    constructor(positionX, positionY, widthOfPlayer) {
+    constructor(positionX, positionY, widthOfPlayer, heightOfPlayer) {
         this.width = 2;
         this.height = 4;
         this.widthOfPlayer = widthOfPlayer;
@@ -294,17 +313,55 @@ class Bullet {
     }
 
     moveUp() {
-        this.positionY +=5;
-        this.domElement.style.bottom = this.positionY + "vw";
+        this.positionY +=7;
+        this.domElement.style.bottom = this.positionY + "vh";
     }
 
-    shoot() {
-        console.log('shoot');
+    moveDown() {
+        this.positionY -=7;
+        this.domElement.style.bottom = this.positionY + "vh";
+    }
+
+    moveRight() {
+        this.positionX +=5;
+        this.domElement.style.left = this.positionX + "vw";
+    }
+
+    moveLeft() {
+        this.positionX -=5;
+        this.domElement.style.left = this.positionX + "vw";
+    }
+
+
+    shootUp() {
         if (this.positionY<=100){
         setInterval(()=>{
             this.moveUp();
+        }, 60);}   
+    }
+
+    shootDown() {
+        console.log('shoot');
+        if (this.positionY>=0){
+        setInterval(()=>{
+            this.moveDown();
         }, 60);}
-        
+    }
+
+    shootRight() {
+        console.log('shoot');
+        if (this.positionX<=100){
+        setInterval(()=>{
+            this.moveRight();
+        }, 60);}   
+    }
+
+    shootLeft() {
+        console.log('shoot');
+        if (this.positionX >= 0){
+        setInterval(()=>{
+            this.moveLeft();
+        }, 60);}   
     }
 }
 
